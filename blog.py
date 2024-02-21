@@ -116,5 +116,3 @@ def auto(id, pw, execute_hour_list, execute_max):
             print("사용 기간이 만료되었습니다.")
     else:
         work(id, pw, execute_hour_list, int(execute_max))
-
-execute("ryunoh9798", "gudtjrwjdals", 5, 1)
