@@ -1,0 +1,105 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+import pyperclip as pp
+import time
+from random import uniform, randrange, shuffle
+from datetime import date
+
+import action
+import comment
+import driverInfo
+import util
+import expiration
+
+# 좋아요를 누르기 전 스크롤을 할 때 스크롤 최소, 최대 시간
+scrollMinPauseTime : float = 0.5
+scrollMaxPauseTime : float = 1.0
+
+# 이웃 블로그 최대 수(이웃이 많을 경우 스크롤 제한하기)
+maxneighbornum = 1000
+
+def execute(id, pw, execute_max, random_rate):
+    try:
+        driver = webdriver.Chrome(options=driverInfo.options)
+    except:
+        driver = webdriver.Chrome(options=driverInfo.options)
+    action.login(driver, id, pw)
+    urls = action.neighborNewFeed(driver, maxneighbornum)
+    cnt = 0
+    for url in urls:
+        if cnt >= execute_max:
+            break
+        action.openBlog(driver, url)
+        # 블로그 페이지 로딩을 위한 시간
+        time.sleep(uniform(1.0, 3.0))
+            
+        # 좋아요가 클릭 가능한지 확인 후 클릭, 아니면 창 닫기 
+        if action.availableLike(driver) :
+            cnt = cnt + 1
+            action.clickLike(driver, scrollMinPauseTime, scrollMaxPauseTime)
+            if(util.random_choice_with_probability(random_rate)):
+                comment.leaveComment(driver)
+            else:
+                action.closeBlog(driver) # 종료
+        else :
+            action.closeBlog(driver)
+
+def time_execute(id, pw, execute_max, execute_hour):
+    hour = 0
+    if len(str(execute_hour)) < 2:
+        hour = f"0{execute_hour}"
+    else:
+        hour = str(execute_hour)
+    minute = util.getMinute()
+    exeTime = f"{hour}:{minute}"
+    print(f"작업 시작할 시간: {exeTime}")
+    util.wait_until(exeTime)
+    execute(id, pw, execute_max, 0.8)
+
+def main(id, pw, execute_hour_list, execute_max):
+    for execute_hour in execute_hour_list:
+        current_time = time.localtime()
+        current_hour = current_time.tm_hour
+        current_minute = current_time.tm_min
+        execute_minute = util.getMinute()
+        if execute_hour == execute_hour_list[0]:
+            if execute_hour_list[-1] == 23 and execute_hour_list[0] == 0:
+                if current_hour == 0 and current_minute > execute_minute and current_minute < 40:
+                    time_execute(id, pw, execute_max, execute_hour, current_minute + 2)
+                elif current_hour == 0 and current_minute >= 40:
+                    continue
+                elif current_hour == 23:
+                    time_execute(id, pw, execute_max, execute_hour, execute_minute)
+            else:
+                time_execute(id, pw, execute_max, execute_hour, execute_minute)
+        else:
+            if current_hour < execute_hour:
+                time_execute(id, pw, execute_max, execute_hour, execute_minute)
+            elif current_hour == execute_hour and current_minute > execute_minute and current_minute < 40:
+                time_execute(id, pw, execute_max, execute_hour, current_minute + 2)
+
+def work(id, pw, execute_hour_list, execute_max):
+    driver = webdriver.Chrome(options=driverInfo.options)
+    action.login(driver, id, pw)
+    time.sleep(3)
+    checkFailLogin = action.failLogin(driver)
+    driver.quit()
+    if checkFailLogin:
+        print("로그인에 실패하였습니다.\n아이디와 비밀번호를 확인해주세요.")
+    else:
+        print("블로그 작업을 시작합니다.")
+        while True:
+            comment.name_list.clear()
+            main(id, pw, execute_hour_list, execute_max)
+
+def auto(id, pw, execute_hour_list, execute_max):
+    if isinstance(expiration.expiration_date, date):
+        if date.today() <= expiration.expiration_date:
+            work(id, pw, execute_hour_list, int(execute_max))
+        else:
+            print("사용 기간이 만료되었습니다.")
+    else:
+        work(id, pw, execute_hour_list, int(execute_max))
+
+execute("ryunoh9798", "gudtjrwjdals", 5, 1)
