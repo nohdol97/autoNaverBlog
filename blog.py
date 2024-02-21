@@ -19,6 +19,9 @@ scrollMaxPauseTime : float = 1.0
 # 이웃 블로그 최대 수(이웃이 많을 경우 스크롤 제한하기)
 maxneighbornum = 1000
 
+# 처음 실행
+firstRunning = True
+
 def execute(id, pw, execute_max, random_rate):
     try:
         driver = webdriver.Chrome(options=driverInfo.options)
@@ -58,26 +61,34 @@ def time_execute(id, pw, execute_max, execute_hour):
     execute(id, pw, execute_max, 0.8)
 
 def main(id, pw, execute_hour_list, execute_max):
+    global firstRunning
     for execute_hour in execute_hour_list:
         current_time = time.localtime()
         current_hour = current_time.tm_hour
         current_minute = current_time.tm_min
         execute_minute = util.getMinute()
-        if execute_hour == execute_hour_list[0]:
-            if execute_hour_list[-1] == 23 and execute_hour_list[0] == 0:
-                if current_hour == 0 and current_minute > execute_minute and current_minute < 40:
-                    time_execute(id, pw, execute_max, execute_hour, current_minute + 2)
-                elif current_hour == 0 and current_minute >= 40:
-                    continue
-                elif current_hour == 23:
-                    time_execute(id, pw, execute_max, execute_hour, execute_minute)
-            else:
-                time_execute(id, pw, execute_max, execute_hour, execute_minute)
-        else:
+        if firstRunning:
             if current_hour < execute_hour:
                 time_execute(id, pw, execute_max, execute_hour, execute_minute)
             elif current_hour == execute_hour and current_minute > execute_minute and current_minute < 40:
                 time_execute(id, pw, execute_max, execute_hour, current_minute + 2)
+            firstRunning = False
+        else:
+            if execute_hour == execute_hour_list[0]:
+                if execute_hour_list[-1] == 23 and execute_hour_list[0] == 0:
+                    if current_hour == 0 and current_minute > execute_minute and current_minute < 40:
+                        time_execute(id, pw, execute_max, execute_hour, current_minute + 2)
+                    elif current_hour == 0 and current_minute >= 40:
+                        continue
+                    elif current_hour == 23:
+                        time_execute(id, pw, execute_max, execute_hour, execute_minute)
+                else:
+                    time_execute(id, pw, execute_max, execute_hour, execute_minute)
+            else:
+                if current_hour < execute_hour:
+                    time_execute(id, pw, execute_max, execute_hour, execute_minute)
+                elif current_hour == execute_hour and current_minute > execute_minute and current_minute < 40:
+                    time_execute(id, pw, execute_max, execute_hour, current_minute + 2)
 
 def work(id, pw, execute_hour_list, execute_max):
     driver = webdriver.Chrome(options=driverInfo.options)
