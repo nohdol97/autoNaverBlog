@@ -87,7 +87,7 @@ def main(id, pw, execute_hour_list, execute_max):
             else:
                 if current_hour < execute_hour:
                     time_execute(id, pw, execute_max, execute_hour, execute_minute)
-                elif current_hour == execute_hour and current_minute > execute_minute and current_minute < 40:
+                elif current_hour == execute_hour and current_minute > int(execute_minute) and current_minute < 40:
                     time_execute(id, pw, execute_max, execute_hour, current_minute + 2)
 
 def work(id, pw, execute_hour_list, execute_max):
