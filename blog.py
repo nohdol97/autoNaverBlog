@@ -10,7 +10,6 @@ import action
 import comment
 import driverInfo
 import util
-import expiration
 
 # 좋아요를 누르기 전 스크롤을 할 때 스크롤 최소, 최대 시간
 scrollMinPauseTime : float = 0.5
@@ -48,14 +47,13 @@ def execute(id, pw, execute_max, random_rate):
         else :
             action.closeBlog(driver)
 
-def time_execute(id, pw, execute_max, execute_hour):
+def time_execute(id, pw, execute_max, execute_hour, execute_minute):
     hour = 0
     if len(str(execute_hour)) < 2:
         hour = f"0{execute_hour}"
     else:
         hour = str(execute_hour)
-    minute = util.getMinute()
-    exeTime = f"{hour}:{minute}"
+    exeTime = f"{hour}:{execute_minute}"
     print(f"작업 시작할 시간: {exeTime}")
     util.wait_until(exeTime)
     execute(id, pw, execute_max, 0.8)
@@ -109,12 +107,4 @@ def work(id, pw, execute_hour_list, execute_max):
             main(id, pw, execute_hour_list, execute_max)
 
 def auto(id, pw, execute_hour_list, execute_max):
-    if isinstance(expiration.expiration_date, date):
-        if date.today() <= expiration.expiration_date:
-            work(id, pw, execute_hour_list, int(execute_max))
-        else:
-            print("사용 기간이 만료되었습니다.")
-    else:
-        work(id, pw, execute_hour_list, int(execute_max))
-
-execute("ryunoh9798", "gudtjrwjdals", 5, 1)
+    work(id, pw, execute_hour_list, int(execute_max))
