@@ -89,8 +89,12 @@ def work(id, pw, execute_hour_list, execute_max):
         print("로그인에 실패하였습니다.\n아이디와 비밀번호를 확인해주세요.")
     else:
         print("블로그 작업을 시작합니다.")
+        days = 0
         while True:
-            comment.name_list.clear()
+            if days == 3:
+                comment.name_list.clear()
+                days = 0
+            days = days + 1
             main(id, pw, execute_hour_list, execute_max)
 
 def auto(id, pw, execute_hour_list, execute_max):
