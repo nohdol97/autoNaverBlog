@@ -1,17 +1,15 @@
 import sys, os
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QCheckBox
 import blog
-import expiration
 
 class MyWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("AutoBlog copyright © Gmail : nohdol97")
         self.setGeometry(100, 100, 400, 200)
-
+        self.set_id = "" # ex) jkjk852
         # 아이디와 비밀번호 입력
-        self.id_label = QLabel("아이디:")
-        self.id_input = QLineEdit()
+        self.id_label = QLabel(f"아이디: {self.set_id}")
 
         self.pw_label = QLabel("비밀번호:")
         self.pw_input = QLineEdit()
@@ -39,12 +37,11 @@ class MyWindow(QWidget):
         self.action_button.clicked.connect(self.action)  # 버튼 클릭 시 action 메소드 실행
 
         # 만료 일정
-        self.expiration_label = QLabel(f"만료일정: {expiration.expiration_date}")
+        self.expiration_label = QLabel(f"만료일정: 무기한")
 
         # 레이아웃 설정
         layout = QVBoxLayout()
         layout.addWidget(self.id_label)
-        layout.addWidget(self.id_input)
         layout.addWidget(self.pw_label)
         layout.addWidget(self.pw_input)
         layout.addWidget(self.max_label)
@@ -62,8 +59,7 @@ class MyWindow(QWidget):
             layout.addLayout(hbox)
 
         layout.addWidget(self.action_button)  # 동작하기 버튼 추가
-        if expiration.expiration_date != "":
-            layout.addWidget(self.expiration_label) # 만료일정 추가
+        layout.addWidget(self.expiration_label) # 만료일정 추가
 
         self.setLayout(layout)
 
@@ -72,21 +68,20 @@ class MyWindow(QWidget):
         if os.path.isfile(file_path):
             with open("savedInfo.txt", "r") as f:
                 lines = f.readlines()
-                self.id_input.setText(lines[0].strip())
-                self.pw_input.setText(lines[1].strip())
-                self.max_input.setText(lines[2].strip())
-                for line in lines[3:]:
+                self.pw_input.setText(lines[0].strip())
+                self.max_input.setText(lines[1].strip())
+                for line in lines[2:]:
                     self.checked_list.append(int(line.strip()))
 
     def action(self):
         time_list = []
         with open("savedInfo.txt", "w") as f:
-            f.write(self.id_input.text() + "\n" + self.pw_input.text() + "\n" + self.max_input.text() + "\n")
+            f.write(self.pw_input.text() + "\n" + self.max_input.text() + "\n")
             for i, checkbox in enumerate(self.option_checkboxes):
                 if checkbox.isChecked():
                     f.write(f"{i}\n")
                     time_list.append(i)
-        blog.auto(self.id_input.text(), self.pw_input.text(), time_list, self.max_input.text())
+        blog.auto(self.set_id, self.pw_input.text(), time_list, self.max_input.text())
 
 
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ def getComment():
     random_emoticon1 = random.choice(emoticon)
     comment_list1 = [
         f"재미난 글 감사드립니다 {random_emoticon1} 잘 읽고 가요!! ",
-        f"안녕하세요~ 정성스런 글 재미있게 보고 갑니당~\n",
+        f"안녕하세요~ 정성스런 글 재미있게 보고 갑니당~{random_emoticon1}\n",
         f"재미난 글 읽고 하트 누르고 갑니당~{random_emoticon1}",
         f"정성스런 글 재미나게 보고 갑니다ㅎㅎ!{random_emoticon1}",
         f"블로그 글 재미있게 보고 갑니다.{random_emoticon1}\n",

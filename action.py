@@ -116,7 +116,6 @@ def neighborNewFeed(driver, maxnum : int):
     unliked_blog_xpath ='''//*[@id="root"]/div[1]/div[2]/div[2]/ul//a[contains(@class, 'u_likeit_list_btn _button off')]/ancestor::div[5]//div[@class ='text_area__mOuKZ']//a'''
     neighborBlogs = driver.find_elements(By.XPATH, unliked_blog_xpath)   
     numOfneighborblogs = len(neighborBlogs)
-    
     SCROLL_PAUSE_TIME = 1
     while numOfneighborblogs < maxnum :
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
