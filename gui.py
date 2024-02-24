@@ -1,5 +1,5 @@
 import sys, os
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QCheckBox
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QCheckBox, QTextEdit
 import blog
 import expiration
 
@@ -7,7 +7,7 @@ class MyWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("AutoBlog copyright © Gmail : nohdol97")
-        self.setGeometry(100, 100, 400, 200)
+        self.setGeometry(100, 100, 1300, 400)
 
         # 아이디와 비밀번호 입력
         self.id_label = QLabel("아이디:")
@@ -41,6 +41,17 @@ class MyWindow(QWidget):
         # 만료 일정
         self.expiration_label = QLabel(f"만료일정: {expiration.expiration_date}")
 
+        # 여러 줄의 텍스트를 입력할 수 있는 공간
+        self.comment1_label = QLabel("댓글 1")
+        self.text_area1 = QTextEdit()
+        self.comment2_label = QLabel("댓글 2")
+        self.text_area2 = QTextEdit()
+        self.getComment()
+
+        # 저장하기 버튼
+        self.save_button = QPushButton("저장하기")
+        self.save_button.clicked.connect(self.saveComment)  # 버튼 클릭 시 action 메소드 실행
+
         # 레이아웃 설정
         layout = QVBoxLayout()
         layout.addWidget(self.id_label)
@@ -65,7 +76,18 @@ class MyWindow(QWidget):
         if expiration.expiration_date != "":
             layout.addWidget(self.expiration_label) # 만료일정 추가
 
-        self.setLayout(layout)
+        # 기존 레이아웃과 텍스트 영역을 가로로 배치
+        hbox = QHBoxLayout()
+        vbox = QVBoxLayout()  # 텍스트 영역을 세로로 배치
+        vbox.addWidget(self.comment1_label)
+        vbox.addWidget(self.text_area1)  # 텍스트 영역 1 추가
+        vbox.addWidget(self.comment2_label)
+        vbox.addWidget(self.text_area2)  # 텍스트 영역 2 추가
+        vbox.addWidget(self.save_button)
+        hbox.addLayout(layout)  # 기존 레이아웃 추가
+        hbox.addLayout(vbox)  # 텍스트 영역 추가
+
+        self.setLayout(hbox)  # 가로 레이아웃 설정
 
     def getInfo(self):
         file_path = os.path.join(os.getcwd(), "savedInfo.txt")
@@ -78,6 +100,18 @@ class MyWindow(QWidget):
                 for line in lines[3:]:
                     self.checked_list.append(int(line.strip()))
 
+    def getComment(self):
+        file_path = os.path.join(os.getcwd(), "commentList1.txt")
+        if os.path.isfile(file_path):
+            with open("commentList1.txt", "r", encoding='utf-8') as f:
+                lines = f.readlines()
+                self.text_area1.setText(''.join(f"{line}" for line in lines))
+        file_path = os.path.join(os.getcwd(), "commentList2.txt")
+        if os.path.isfile(file_path):
+            with open("commentList2.txt", "r", encoding='utf-8') as f:
+                lines = f.readlines()
+                self.text_area2.setText(''.join(f"{line}" for line in lines))
+
     def action(self):
         time_list = []
         with open("savedInfo.txt", "w") as f:
@@ -87,6 +121,12 @@ class MyWindow(QWidget):
                     f.write(f"{i}\n")
                     time_list.append(i)
         blog.auto(self.id_input.text(), self.pw_input.text(), time_list, self.max_input.text())
+    
+    def saveComment(self):
+        with open("commentList1.txt", "w", encoding='utf-8') as f:
+            f.write(self.text_area1.toPlainText())
+        with open("commentList2.txt", "w", encoding='utf-8') as f:
+            f.write(self.text_area2.toPlainText())
 
 
 if __name__ == "__main__":
