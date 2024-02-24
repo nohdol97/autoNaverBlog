@@ -18,32 +18,14 @@ def getComment():
                 '🩷','🧡','💛','💚','💙','🩵','💗',
                 '💖','👍','💫','⭐️','🌟']
     random_emoticon1 = random.choice(emoticon)
-    comment_list1 = [
-        f"재미난 글 감사드립니다 {random_emoticon1} 잘 읽고 가요!! ",
-        f"안녕하세요~ 정성스런 글 재미있게 보고 갑니당~{random_emoticon1}\n",
-        f"재미난 글 읽고 하트 누르고 갑니당~{random_emoticon1}",
-        f"정성스런 글 재미나게 보고 갑니다ㅎㅎ!{random_emoticon1}",
-        f"블로그 글 재미있게 보고 갑니다.{random_emoticon1}\n",
-        f"정성스럽게 쓰신 글 재미나게 보고 가유!\n{random_emoticon1}",
-        f"알찬 정보가 많은 글이네요ㅎㅎ{random_emoticon1}\n",
-        f"글이 술술 읽히네요~ 재밌게 보고 가요!!{random_emoticon1}\n",
-        f"글이 재미있고 흥미로워요!{random_emoticon1} 즐겁게 보고 가요~ 하트도 누릅니당!",
-        f"글이 너무 깔끔하고 잘 정리되어 있네요!!{random_emoticon1} 참고하고 갑니당~"
-    ]
+    with open('commentList1.txt', 'r', encoding='utf-8') as file:
+        lines1 = file.readlines()
+    comment_list1 = [f"{line.strip().replace('{emoticon}', random_emoticon1).replace('{day}', day)}" for line in lines1]
+    with open('commentList2.txt', 'r', encoding='utf-8') as file:
+        lines2 = file.readlines()
     random_emoticon2 = random.choice(emoticon)
-    comment_list2 = [
-        f"제 블로그도 시간내셔서 한번 들러주세요~\n행복한 {day} 되세요!",
-        f"{day} 좋은 하루되세요!",
-        f"편안한 하루 되세요!{random_emoticon2}",
-        f"행복한 하루 되세요!",
-        f"행복한 {day} 되시구, 내일도 화이팅임다!!!",
-        f"제 블로그도 시간나시면 한번 들러주세요~~!ㅎ",
-        f"제 블로그도 시간나시면 한번 들러주세요!{random_emoticon2} 재밌는 글 많습니다ㅎㅅㅎ",
-        f"즐거운 {day} 되세요! 또 방문할게요.",
-        f"제 블로그도 한번 구경하러 와주세요. 좋은 글이 많아요~\n{day} 행복하고 즐거운 하루 되세요!",
-        f"제 블로그도 한번 살펴봐주세요. 유용한 정보 많아요~ ㅎㅎ\n{day} 편안하고 좋은 하루 되세요!",
-    ]
-    random_comment = random.choice(comment_list1) + random.choice(comment_list2)
+    comment_list2 = [f"{line.strip().replace('{emoticon}', random_emoticon2).replace('{day}', day)}" for line in lines2]
+    random_comment = random.choice(comment_list1) + "\n" + random.choice(comment_list2)
     return random_comment
 
 def leaveComment(driver):
