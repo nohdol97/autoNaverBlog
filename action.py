@@ -113,6 +113,7 @@ def clickLike(driver, scrollMinPauseTime, scrollMaxPauseTime):
 def neighborNewFeed(driver, maxnum : int):
     driver.get("https://m.blog.naver.com/FeedList.naver")
     time.sleep(uniform(3, 7))
+    cancelNotification(driver)
     unliked_blog_xpath ='''//*[@id="root"]/div[1]/div[2]/div[2]/ul//a[contains(@class, 'u_likeit_list_btn _button off')]/ancestor::div[5]//div[@class ='text_area__mOuKZ']//a'''
     neighborBlogs = driver.find_elements(By.XPATH, unliked_blog_xpath)   
     numOfneighborblogs = len(neighborBlogs)
@@ -130,6 +131,25 @@ def neighborNewFeed(driver, maxnum : int):
     for neighborBlog in neighborBlogs:
         neighborUrls.append(neighborBlog.get_attribute('href'))
     return neighborUrls
+
+def cancelNotification(driver):
+    try:
+        link_xpath2 = '//*[@id="root"]/div[1]/div[2]/div/div[2]/div/div[2]/a[1]/span'
+        link_element2 = driver.find_element(By.XPATH, link_xpath2)
+        link_element2.click()
+        driver.get("https://m.blog.naver.com/FeedList.naver")
+        time.sleep(uniform(3, 7))
+    except:
+        pass
+    try:
+        time.sleep(1)
+        link_xpath1 = '//*[@id="root"]/div[1]/div[2]/div/div[2]/div/div[2]/a[2]/span'
+        link_element1 = driver.find_element(By.XPATH, link_xpath1)
+        link_element1.click()
+        driver.get("https://m.blog.naver.com/FeedList.naver")
+        time.sleep(uniform(3, 7))
+    except:
+        pass
 
 # # 설정한 태그 공감 누르기
 # for searchWord in searchWords :
