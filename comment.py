@@ -28,7 +28,7 @@ def getComment():
     random_comment = random.choice(comment_list1) + "\n" + random.choice(comment_list2)
     return random_comment
 
-def leaveComment(driver):
+def leaveComment(driver, is_secret):
     try:
         name_label_xpath = '//*[@id="ct"]/div[4]/div[4]/div/a/div[2]/strong'
         name_label_element = driver.find_element(By.XPATH, name_label_xpath)
@@ -65,7 +65,7 @@ def leaveComment(driver):
                 comment_label_element.send_keys(Keys.CONTROL,'v')
             time.sleep(2)
             # 비밀글로 할지
-            if(util.random_choice_with_probability(0.3)):
+            if(is_secret and util.random_choice_with_probability(0.3)):
                 secret_xpath = '//*[@id="naverComment__write_textarea_secret_check"]'
                 secret_element = driver.find_element(By.XPATH, secret_xpath)
                 secret_element.click()
