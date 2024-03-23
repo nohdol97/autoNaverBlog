@@ -22,7 +22,7 @@ maxneighbornum = 1000
 # 처음 실행
 firstRunning = True
 
-def execute(id, pw, execute_max, random_rate):
+def execute(id, pw, execute_max, random_rate, is_secret):
     try:
         driver = webdriver.Chrome(options=driverInfo.options)
     except:
@@ -42,13 +42,13 @@ def execute(id, pw, execute_max, random_rate):
             cnt = cnt + 1
             action.clickLike(driver, scrollMinPauseTime, scrollMaxPauseTime)
             if(util.random_choice_with_probability(random_rate)):
-                comment.leaveComment(driver)
+                comment.leaveComment(driver, is_secret)
             else:
                 action.closeBlog(driver) # 종료
         else :
             action.closeBlog(driver)
 
-def time_execute(id, pw, execute_max, execute_hour):
+def time_execute(id, pw, execute_max, execute_hour, random_rate, is_secret):
     hour = 0
     if len(str(execute_hour)) < 2:
         hour = f"0{execute_hour}"
@@ -58,9 +58,9 @@ def time_execute(id, pw, execute_max, execute_hour):
     exeTime = f"{hour}:{minute}"
     print(f"작업 시작할 시간: {exeTime}")
     util.wait_until(exeTime)
-    execute(id, pw, execute_max, 0.8)
+    execute(id, pw, execute_max, random_rate, is_secret)
 
-def main(id, pw, execute_hour_list, execute_max):
+def main(id, pw, execute_hour_list, execute_max, random_rate, is_secret):
     global firstRunning
     for execute_hour in execute_hour_list:
         current_time = time.localtime()
@@ -69,28 +69,28 @@ def main(id, pw, execute_hour_list, execute_max):
         execute_minute = util.getMinute()
         if firstRunning:
             if current_hour < execute_hour:
-                time_execute(id, pw, execute_max, execute_hour, execute_minute)
+                time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret)
             elif current_hour == execute_hour and current_minute > execute_minute and current_minute < 40:
-                time_execute(id, pw, execute_max, execute_hour, current_minute + 2)
+                time_execute(id, pw, execute_max, execute_hour, current_minute + 2, random_rate, is_secret)
             firstRunning = False
         else:
             if execute_hour == execute_hour_list[0]:
                 if execute_hour_list[-1] == 23 and execute_hour_list[0] == 0:
                     if current_hour == 0 and current_minute > execute_minute and current_minute < 40:
-                        time_execute(id, pw, execute_max, execute_hour, current_minute + 2)
+                        time_execute(id, pw, execute_max, execute_hour, current_minute + 2, random_rate, is_secret)
                     elif current_hour == 0 and current_minute >= 40:
                         continue
                     elif current_hour == 23:
-                        time_execute(id, pw, execute_max, execute_hour, execute_minute)
+                        time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret)
                 else:
-                    time_execute(id, pw, execute_max, execute_hour, execute_minute)
+                    time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret)
             else:
                 if current_hour < execute_hour:
-                    time_execute(id, pw, execute_max, execute_hour, execute_minute)
+                    time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret)
                 elif current_hour == execute_hour and current_minute > int(execute_minute) and current_minute < 40:
-                    time_execute(id, pw, execute_max, execute_hour, current_minute + 2)
+                    time_execute(id, pw, execute_max, execute_hour, current_minute + 2, random_rate, is_secret)
 
-def work(id, pw, execute_hour_list, execute_max):
+def work(id, pw, execute_hour_list, execute_max, random_rate, is_secret):
     driver = webdriver.Chrome(options=driverInfo.options)
     action.login(driver, id, pw)
     time.sleep(3)
@@ -106,13 +106,13 @@ def work(id, pw, execute_hour_list, execute_max):
                 comment.name_list.clear()
                 days = 0
             days = days + 1
-            main(id, pw, execute_hour_list, execute_max)
+            main(id, pw, execute_hour_list, execute_max, random_rate, is_secret)
 
-def auto(id, pw, execute_hour_list, execute_max):
+def auto(id, pw, execute_hour_list, execute_max, random_rate, is_secret):
     if isinstance(expiration.expiration_date, date):
         if date.today() <= expiration.expiration_date:
-            work(id, pw, execute_hour_list, int(execute_max))
+            work(id, pw, execute_hour_list, int(execute_max), random_rate, is_secret)
         else:
             print("사용 기간이 만료되었습니다.")
     else:
-        work(id, pw, execute_hour_list, int(execute_max))
+        work(id, pw, execute_hour_list, int(execute_max), random_rate, is_secret)
