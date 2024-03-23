@@ -32,11 +32,16 @@ def inputkeys(driver, someWord : str, placeholder : str):
     # holderInput.send_keys(Keys.COMMAND, 'v')
     
 def login(driver, naverid : str, naverpassword : str):
-    driver.get("https://nid.naver.com/nidlogin.login?svctype=262144&url=http://m.naver.com/aside/")    
-    inputkeys(driver, naverid, "아이디")
-    inputkeys(driver, naverpassword, "비밀번호")
-    driver.find_element(By.XPATH, f"//input[@placeholder='비밀번호']").send_keys(Keys.ENTER)
-    time.sleep(2)
+    fail_login = False
+    for i in range(2):
+        if i == 1 and fail_login == False:
+            break
+        driver.get("https://nid.naver.com/nidlogin.login?svctype=262144&url=http://m.naver.com/aside/")    
+        inputkeys(driver, naverid, "아이디")
+        inputkeys(driver, naverpassword, "비밀번호")
+        driver.find_element(By.XPATH, f"//input[@placeholder='비밀번호']").send_keys(Keys.ENTER)
+        time.sleep(2)
+        fail_login = failLogin(driver)
 
 def failLogin(driver):
     try:
