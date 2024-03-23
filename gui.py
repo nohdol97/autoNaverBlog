@@ -50,6 +50,15 @@ class MyWindow(QWidget):
         self.save_button = QPushButton("저장하기")
         self.save_button.clicked.connect(self.saveComment)  # 버튼 클릭 시 action 메소드 실행
 
+        # 댓글을 작성할지 랜덤값(작성할 확률)
+        self.random_rate_label = QLabel("댓글작성 확률(%):")
+        self.random_rate_input = QLineEdit()
+        self.random_rate_input.setText("100")  # Allow only numbers
+
+        # 체크박스: isSecret
+        self.is_secret_checkbox = QCheckBox("비밀댓글 적용 여부(30% 확률)")
+        self.is_secret_checkbox.setChecked(False)  # Default value
+
         # 레이아웃 설정
         layout = QVBoxLayout()
         layout.addWidget(self.id_label)
@@ -68,6 +77,10 @@ class MyWindow(QWidget):
                 hbox.addStretch(1)  # 체크박스 간에 공간 추가
             hbox.addStretch(1)
             layout.addLayout(hbox)
+
+        layout.addWidget(self.random_rate_label)
+        layout.addWidget(self.random_rate_input)
+        layout.addWidget(self.is_secret_checkbox)
 
         layout.addWidget(self.action_button)  # 동작하기 버튼 추가
         layout.addWidget(self.expiration_label) # 만료일정 추가
@@ -109,13 +122,15 @@ class MyWindow(QWidget):
 
     def action(self):
         time_list = []
+        random_rate = float(self.random_rate_input.text()) / 100  # 숫자로 변환
+        is_secret = self.is_secret_checkbox.isChecked()   # 체크 여부 확인
         with open("savedInfo.txt", "w") as f:
             f.write(self.pw_input.text() + "\n" + self.max_input.text() + "\n")
             for i, checkbox in enumerate(self.option_checkboxes):
                 if checkbox.isChecked():
                     f.write(f"{i}\n")
                     time_list.append(i)
-        blog.auto(self.set_id, self.pw_input.text(), time_list, self.max_input.text())
+        blog.auto(self.set_id, self.pw_input.text(), time_list, self.max_input.text(), random_rate, is_secret)
     
     def saveComment(self):
         with open("commentList1.txt", "w", encoding='utf-8') as f:
