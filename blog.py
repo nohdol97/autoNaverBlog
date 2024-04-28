@@ -24,9 +24,9 @@ firstRunning = True
 
 def execute(id, pw, execute_max, random_rate, is_secret):
     try:
-        driver = webdriver.Chrome(options=driverInfo.options)
+        driver = driverInfo.setup_chrome_driver()
     except:
-        driver = webdriver.Chrome(options=driverInfo.options)
+        driver = driverInfo.setup_chrome_driver()
     action.login(driver, id, pw)
     urls = action.neighborNewFeed(driver, maxneighbornum)
     cnt = 0
@@ -91,7 +91,7 @@ def main(id, pw, execute_hour_list, execute_max, random_rate, is_secret):
                     time_execute(id, pw, execute_max, execute_hour, current_minute + 2, random_rate, is_secret)
 
 def work(id, pw, execute_hour_list, execute_max, random_rate, is_secret):
-    driver = webdriver.Chrome(options=driverInfo.options)
+    driver = driverInfo.setup_chrome_driver()
     action.login(driver, id, pw)
     time.sleep(3)
     checkFailLogin = action.failLogin(driver)
