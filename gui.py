@@ -61,6 +61,10 @@ class MyWindow(QWidget):
         self.is_secret_checkbox = QCheckBox("비밀댓글 적용 여부(30% 확률)")
         self.is_secret_checkbox.setChecked(False)  # Default value
 
+        # 체크박스: isUnNewPost
+        self.is_unNewPost_checkbox = QCheckBox("게시글 하루 3개 이상 이웃 새글 보지 않기")
+        self.is_unNewPost_checkbox.setChecked(True)  # Default value
+
         # 레이아웃 설정
         layout = QVBoxLayout()
         layout.addWidget(self.id_label)
@@ -84,6 +88,7 @@ class MyWindow(QWidget):
         layout.addWidget(self.random_rate_label)
         layout.addWidget(self.random_rate_input)
         layout.addWidget(self.is_secret_checkbox)
+        layout.addWidget(self.is_unNewPost_checkbox)
 
         layout.addWidget(self.action_button)  # 동작하기 버튼 추가
         if expiration.expiration_date != "":
@@ -129,6 +134,7 @@ class MyWindow(QWidget):
         time_list = []
         random_rate = float(self.random_rate_input.text()) / 100  # 숫자로 변환
         is_secret = self.is_secret_checkbox.isChecked()   # 체크 여부 확인
+        is_unNewPost = self.is_unNewPost_checkbox.isChecked()
         with open("savedInfo.txt", "w") as f:
             f.write(self.id_input.text() + "\n" + self.pw_input.text() + "\n" + self.max_input.text() + "\n")
             for i, checkbox in enumerate(self.option_checkboxes):
@@ -136,7 +142,7 @@ class MyWindow(QWidget):
                     f.write(f"{i}\n")
                     time_list.append(i)
             f.write()
-        blog.auto(self.id_input.text(), self.pw_input.text(), time_list, self.max_input.text(), random_rate, is_secret)
+        blog.auto(self.id_input.text(), self.pw_input.text(), time_list, self.max_input.text(), random_rate, is_secret, is_unNewPost)
     
     def saveComment(self):
         with open("commentList1.txt", "w", encoding='utf-8') as f:
