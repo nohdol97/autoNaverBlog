@@ -9,7 +9,7 @@ import pyperclip
 import action
 import util
 
-name_list = []
+name_dict = {}
 
 def getComment():
     day = util.getDay() + "요일"
@@ -30,18 +30,30 @@ def getComment():
 
 def leaveComment(driver, is_secret):
     try:
-        name_label_xpath = '//*[@id="ct"]/div[4]/div[4]/div/a/div[2]/strong'
-        name_label_element = driver.find_element(By.XPATH, name_label_xpath)
-        name = name_label_element.text
-        if name in name_list:
+        name = ""
+        try:
+            name_label_xpath = '//*[@id="ct"]/div[4]/div[5]/div/a/div[2]/strong'
+            name_label_element = driver.find_element(By.XPATH, name_label_xpath)
+            name = name_label_element.text
+        except:
+            name_label_xpath = '//*[@id="ct"]/div[4]/div[4]/div/a/div[2]/strong'
+            name_label_element = driver.find_element(By.XPATH, name_label_xpath)
+            name = name_label_element.text
+        if name in name_dict.keys():
+            name_dict[name] = name_dict[name] + 1
             action.closeBlog(driver) # 종료
         else:
-            name_list.append(name)
+            name_dict[name] = 1
             time.sleep(1)
             # 댓글 달기로 이동
-            link_xpath = "//*[@id='ct']/div[4]/div[3]/div/div[2]/a[1]"
-            link_element = driver.find_element(By.XPATH, link_xpath)
-            link_element.click()
+            try:
+                link_xpath = '//*[@id="ct"]/div[4]/div[4]/div/div[2]/a[1]/span'
+                link_element = driver.find_element(By.XPATH, link_xpath)
+                link_element.click()
+            except:
+                link_xpath = "//*[@id='ct']/div[4]/div[3]/div/div[2]/a[1]"
+                link_element = driver.find_element(By.XPATH, link_xpath)
+                link_element.click()
             time.sleep(2)
             # 댓글 공간
             comment_label_xpath = '//*[@id="naverComment__write_textarea"]'

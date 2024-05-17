@@ -20,7 +20,7 @@ maxneighbornum = 1000
 # 처음 실행
 firstRunning = True
 
-def execute(id, pw, execute_max, random_rate, is_secret):
+def execute(id, pw, execute_max, random_rate, is_secret, is_unNewPost):
     try:
         driver = driverInfo.setup_chrome_driver()
     except:
@@ -45,9 +45,10 @@ def execute(id, pw, execute_max, random_rate, is_secret):
                 action.closeBlog(driver) # 종료
         else :
             action.closeBlog(driver)
+    if is_unNewPost:
+        action.unNewPost(driver)
 
-
-def time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret):
+def time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret, is_unNewPost):
     hour = 0
     if len(str(execute_hour)) < 2:
         hour = f"0{execute_hour}"
@@ -56,9 +57,9 @@ def time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate,
     exeTime = f"{hour}:{execute_minute}"
     print(f"작업 시작할 시간: {exeTime}")
     util.wait_until(exeTime)
-    execute(id, pw, execute_max, random_rate, is_secret)
+    execute(id, pw, execute_max, random_rate, is_secret, is_unNewPost)
 
-def main(id, pw, execute_hour_list, execute_max, random_rate, is_secret):
+def main(id, pw, execute_hour_list, execute_max, random_rate, is_secret, is_unNewPost):
     global firstRunning
     for execute_hour in execute_hour_list:
         current_time = time.localtime()
@@ -67,28 +68,28 @@ def main(id, pw, execute_hour_list, execute_max, random_rate, is_secret):
         execute_minute = util.getMinute()
         if firstRunning:
             if current_hour < execute_hour:
-                time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret)
+                time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret, is_unNewPost)
             elif current_hour == execute_hour and current_minute > execute_minute and current_minute < 40:
-                time_execute(id, pw, execute_max, execute_hour, current_minute + 2, random_rate, is_secret)
+                time_execute(id, pw, execute_max, execute_hour, current_minute + 2, random_rate, is_secret, is_unNewPost)
             firstRunning = False
         else:
             if execute_hour == execute_hour_list[0]:
                 if execute_hour_list[-1] == 23 and execute_hour_list[0] == 0:
                     if current_hour == 0 and current_minute > execute_minute and current_minute < 40:
-                        time_execute(id, pw, execute_max, execute_hour, current_minute + 2, random_rate, is_secret)
+                        time_execute(id, pw, execute_max, execute_hour, current_minute + 2, random_rate, is_secret, is_unNewPost)
                     elif current_hour == 0 and current_minute >= 40:
                         continue
                     elif current_hour == 23:
-                        time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret)
+                        time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret, is_unNewPost)
                 else:
-                    time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret)
+                    time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret, is_unNewPost)
             else:
                 if current_hour < execute_hour:
-                    time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret)
+                    time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret, is_unNewPost)
                 elif current_hour == execute_hour and current_minute > int(execute_minute) and current_minute < 40:
-                    time_execute(id, pw, execute_max, execute_hour, current_minute + 2, random_rate, is_secret)
+                    time_execute(id, pw, execute_max, execute_hour, current_minute + 2, random_rate, is_secret, is_unNewPost)
 
-def work(id, pw, execute_hour_list, execute_max, random_rate, is_secret):
+def work(id, pw, execute_hour_list, execute_max, random_rate, is_secret, is_unNewPost):
     driver = driverInfo.setup_chrome_driver()
     action.login(driver, id, pw)
     time.sleep(3)
@@ -101,10 +102,10 @@ def work(id, pw, execute_hour_list, execute_max, random_rate, is_secret):
         days = 0
         while True:
             if days == 3:
-                comment.name_list.clear()
+                comment.name_dict.clear()
                 days = 0
             days = days + 1
-            main(id, pw, execute_hour_list, execute_max, random_rate, is_secret)
+            main(id, pw, execute_hour_list, execute_max, random_rate, is_secret, is_unNewPost)
 
-def auto(id, pw, execute_hour_list, execute_max, random_rate, is_secret):
-    work(id, pw, execute_hour_list, int(execute_max), random_rate, is_secret)
+def auto(id, pw, execute_hour_list, execute_max, random_rate, is_secret, is_unNewPost):
+    work(id, pw, execute_hour_list, int(execute_max), random_rate, is_secret, is_unNewPost)
