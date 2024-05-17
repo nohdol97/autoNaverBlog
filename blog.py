@@ -39,10 +39,7 @@ def execute(id, pw, execute_max, random_rate, is_secret, is_unNewPost):
         if action.availableLike(driver) :
             cnt = cnt + 1
             action.clickLike(driver, scrollMinPauseTime, scrollMaxPauseTime)
-            if(util.random_choice_with_probability(random_rate)):
-                comment.leaveComment(driver, is_secret)
-            else:
-                action.closeBlog(driver) # 종료
+            comment.leaveComment(driver, is_secret, util.random_choice_with_probability(random_rate))
         else :
             action.closeBlog(driver)
     if is_unNewPost:
