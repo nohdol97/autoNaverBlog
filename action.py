@@ -193,6 +193,7 @@ def unNewPost(driver):
                 erase_element = driver.find_element(By.XPATH, erase_xpath)
                 erase_element.click()
                 time.sleep(2)
+                comment.name_dict.pop(key)
             except:
                 pass
 
