@@ -163,7 +163,7 @@ def unNewPost(driver):
     neighborList_element.click()
     time.sleep(3)
 
-    for key, value in comment.name_dict.items():
+    for key, value in list(comment.name_dict.items()):
         if value >= 3:
             try:
                 search_neighbor_xpath = '//*[@id="root"]/div[1]/div[2]/form/input'
