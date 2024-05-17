@@ -88,7 +88,7 @@ def leaveComment(driver, is_secret, is_leaveComment):
                 submit_element = driver.find_element(By.XPATH, subit_xpath)
                 submit_element.click()
                 time.sleep(2)
-                action.closeBlog(driver) # 종료
+            action.closeBlog(driver) # 종료
     except:
         action.closeBlog(driver) # 종료
         pass
