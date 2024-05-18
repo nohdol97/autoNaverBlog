@@ -1,5 +1,5 @@
 # Define the source branch with the changes
-$sourceBranch = "main"
+$sourceBranch = "infinite"
 
 # Get the list of all branches
 $branches = git branch --list | ForEach-Object { $_.Trim() -replace '\* ', '' }
