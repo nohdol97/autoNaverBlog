@@ -198,7 +198,11 @@ def unNewPost(driver):
                 except:
                     pass
             else:
-                print("${key} : ${value}")
+                try:
+                    print("${key} : ${value}")
+                    comment.name_dict.pop(key)
+                except:
+                    pass
 
 # # 설정한 태그 공감 누르기
 # for searchWord in searchWords :
