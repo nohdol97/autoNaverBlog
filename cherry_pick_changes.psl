@@ -4,12 +4,15 @@ $sourceBranch = "infinite"
 # Get the list of all branches
 $branches = git branch --list | ForEach-Object { $_.Trim() -replace '\* ', '' }
 
-# Loop through each branch and merge the changes
+# Get the latest commit hash from the source branch
+$latestCommit = git log -n 1 --pretty=format:"%H" $sourceBranch
+
+# Loop through each branch and cherry-pick the changes
 foreach ($branch in $branches) {
     if ($branch -ne $sourceBranch) {
-        Write-Host "Merging changes into $branch"
+        Write-Host "Cherry-picking changes into $branch"
         git checkout $branch
-        git merge $sourceBranch
+        git cherry-pick $latestCommit
     }
 }
 
