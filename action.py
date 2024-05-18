@@ -159,6 +159,7 @@ def unNewPost(driver):
     neighborList_element = driver.find_element(By.XPATH, neighborList_xpath)
     neighborList_element.click()
     time.sleep(3)
+    unNewPostNeighbor = []
 
     for key, value in list(comment.name_dict.items()):
         if value >= 3:
@@ -192,6 +193,7 @@ def unNewPost(driver):
                     erase_element.click()
                     time.sleep(2)
                     comment.name_dict.pop(key)
+                    unNewPostNeighbor.append(key)
                 except:
                     pass
             else:
@@ -200,6 +202,7 @@ def unNewPost(driver):
                     comment.name_dict.pop(key)
                 except:
                     pass
+    print(f"새로운 글 보지 않기 이웃 목록: {unNewPostNeighbor}")
 
 def contains_english_letters_or_digits(s):
     return any(char.isalpha() or char.isdigit() for char in s)
