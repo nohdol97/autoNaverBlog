@@ -196,7 +196,7 @@ def unNewPost(driver):
                     pass
             else:
                 try:
-                    print("${key} : ${value}")
+                    print(f"{key} : {value}")
                     comment.name_dict.pop(key)
                 except:
                     pass
