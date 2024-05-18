@@ -163,7 +163,7 @@ def unNewPost(driver):
 
     for key, value in list(comment.name_dict.items()):
         if value >= 3:
-            if len(key) >= 2:
+            if (contains_english_letters_or_digits(key) and len(key) >= 4) or (not contains_english_letters_or_digits(key) and len(key) >= 2):
                 try:
                     search_neighbor_xpath = '//*[@id="root"]/div[1]/div[2]/form/input'
                     search_neighbor_element = driver.find_element(By.XPATH, search_neighbor_xpath)
@@ -201,6 +201,9 @@ def unNewPost(driver):
                     comment.name_dict.pop(key)
                 except:
                     pass
+
+def contains_english_letters_or_digits(s):
+    return any(char.isalpha() or char.isdigit() for char in s)
 
 # # 설정한 태그 공감 누르기
 # for searchWord in searchWords :
