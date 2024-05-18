@@ -157,7 +157,6 @@ def cancelNotification(driver):
         pass
 
 def unNewPost(driver):
-    print(comment.name_dict)
     neighborList_xpath = '//*[@id="root"]/nav/div/span[3]/a'
     neighborList_element = driver.find_element(By.XPATH, neighborList_xpath)
     neighborList_element.click()
@@ -165,37 +164,40 @@ def unNewPost(driver):
 
     for key, value in list(comment.name_dict.items()):
         if value >= 3:
-            try:
-                search_neighbor_xpath = '//*[@id="root"]/div[1]/div[2]/form/input'
-                search_neighbor_element = driver.find_element(By.XPATH, search_neighbor_xpath)
-                search_neighbor_element.click()
-                pp.copy(key)
-                search_neighbor_element.send_keys(Keys.CONTROL, 'v')
-                driver.find_element(By.XPATH, search_neighbor_xpath).send_keys(Keys.ENTER)
-                time.sleep(2)
+            if len(key) >= 2:
+                try:
+                    search_neighbor_xpath = '//*[@id="root"]/div[1]/div[2]/form/input'
+                    search_neighbor_element = driver.find_element(By.XPATH, search_neighbor_xpath)
+                    search_neighbor_element.click()
+                    pp.copy(key)
+                    search_neighbor_element.send_keys(Keys.CONTROL, 'v')
+                    driver.find_element(By.XPATH, search_neighbor_xpath).send_keys(Keys.ENTER)
+                    time.sleep(2)
 
-                more_btn_xpath = '//*[@id="root"]/div[1]/div[4]/ul/li/div/div/button[2]'
-                more_btn_element = driver.find_element(By.XPATH, more_btn_xpath)
-                more_btn_element.click()
-                time.sleep(2)
+                    more_btn_xpath = '//*[@id="root"]/div[1]/div[4]/ul/li/div/div/button[2]'
+                    more_btn_element = driver.find_element(By.XPATH, more_btn_xpath)
+                    more_btn_element.click()
+                    time.sleep(2)
 
-                new_post_available_xpath = '//*[@id="buddy_news"]'
-                new_post_available_element = driver.find_element(By.XPATH, new_post_available_xpath)
-                new_post_available_element.click()
-                time.sleep(2)
+                    new_post_available_xpath = '//*[@id="buddy_news"]'
+                    new_post_available_element = driver.find_element(By.XPATH, new_post_available_xpath)
+                    new_post_available_element.click()
+                    time.sleep(2)
 
-                close_more_btn_xpath = '//*[@id="root"]/div[4]/div/div/div/button'
-                close_more_btn_element = driver.find_element(By.XPATH, close_more_btn_xpath)
-                close_more_btn_element.click()
-                time.sleep(2)
+                    close_more_btn_xpath = '//*[@id="root"]/div[4]/div/div/div/button'
+                    close_more_btn_element = driver.find_element(By.XPATH, close_more_btn_xpath)
+                    close_more_btn_element.click()
+                    time.sleep(2)
 
-                erase_xpath = '//*[@id="root"]/div[1]/div[2]/button'
-                erase_element = driver.find_element(By.XPATH, erase_xpath)
-                erase_element.click()
-                time.sleep(2)
-                comment.name_dict.pop(key)
-            except:
-                pass
+                    erase_xpath = '//*[@id="root"]/div[1]/div[2]/button'
+                    erase_element = driver.find_element(By.XPATH, erase_xpath)
+                    erase_element.click()
+                    time.sleep(2)
+                    comment.name_dict.pop(key)
+                except:
+                    pass
+            else:
+                print("${key} : ${value}")
 
 # # 설정한 태그 공감 누르기
 # for searchWord in searchWords :
