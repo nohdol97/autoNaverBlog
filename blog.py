@@ -42,6 +42,7 @@ def execute(id, pw, execute_max, random_rate, is_secret, is_unNewPost):
             comment.leaveComment(driver, is_secret, util.random_choice_with_probability(random_rate))
         else :
             action.closeBlog(driver)
+    print(f"블로그 좋아요를 {action.clickedLikeNum}개 누름")
     if is_unNewPost:
         action.unNewPost(driver)
 

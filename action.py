@@ -113,8 +113,6 @@ def clickLike(driver, scrollMinPauseTime, scrollMaxPauseTime):
     like_btn.click()
     global clickedLikeNum
     clickedLikeNum += 1
-    print(f"블로그 좋아요를 {clickedLikeNum}개 누름")
-    # closeBlog()
     
 def neighborNewFeed(driver, maxnum : int):
     driver.get("https://m.blog.naver.com/FeedList.naver")
