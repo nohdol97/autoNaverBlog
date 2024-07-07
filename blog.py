@@ -140,5 +140,5 @@ def serverAction():
         print("블로그 작업을 시작합니다.")
         main(id, pw, time_list, max_input, random_rate, is_secret, is_unNewPost)
 
-# serverAction()
-execute("ryunoh9798", "rkddkwlvnf0!", 150, 70, False, True)
+serverAction()
+# execute("ryunoh9798", "rkddkwlvnf0!", 150, 70, False, True)
