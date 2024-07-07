@@ -1,15 +1,37 @@
 from selenium import webdriver
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 
 def setup_chrome_driver():
-    options = webdriver.ChromeOptions()
-    options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    options.add_argument('--no-sandbox')
-    options.add_argument("disable-gpu")
-    # options.add_argument('headless')
-    options.add_argument('window-size=1920x1080')
-    options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--log-level=3")  # ERROR 이상의 로그만 출력
+    # chrome_options.add_argument('--disable-javascript')  # 자바스크립트 비활성화
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    # chrome_options.add_argument('--disable-gpu')
+    # chrome_options.add_argument('--disable-software-rasterizer')
+    chrome_options.add_argument('--no-zygote')
+    chrome_options.add_argument('--disable-setuid-sandbox')
+    chrome_options.add_argument('--window-size=800,600')  # 해상도 최소화
+    chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+    chrome_options.add_argument('--disable-extensions')
+    chrome_options.add_argument('--disable-infobars')
+    chrome_options.add_argument('--disable-popup-blocking')
+    chrome_options.add_argument("--disk-cache-size=0")
+    chrome_options.add_argument('--disable-background-timer-throttling')
+    chrome_options.add_argument('--disable-renderer-backgrounding')
+    chrome_options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
 
-    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    chrome_prefs = {
+        "profile.managed_default_content_settings.images": 2,  # 이미지 비활성화
+        "profile.managed_default_content_settings.videos": 2,  # 동영상 비활성화
+        "profile.managed_default_content_settings.stylesheets": 2,  # 스타일시트 비활성화
+        "profile.default_content_settings.popups": 0,
+        "download.default_directory": "/dev/null"
+    }
+    chrome_options.add_experimental_option("prefs", chrome_prefs)
+
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver

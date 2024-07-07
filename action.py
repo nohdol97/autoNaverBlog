@@ -21,7 +21,7 @@ stopTagNum : int = 0
 
 def inputkeys(driver, someWord : str, placeholder : str):
     pp.copy(someWord)
-    holderInput = driver.find_element(By.XPATH, f"//input[@placeholder='{placeholder}']")
+    holderInput = driver.find_element(By.XPATH, f'//*[@id="{placeholder}"]')
     holderInput.click()
     pp.copy(someWord)
     time.sleep(uniform(1.0, 5.0))
@@ -38,9 +38,9 @@ def login(driver, naverid : str, naverpassword : str):
         if i == 1 and fail_login == False:
             break
         driver.get("https://nid.naver.com/nidlogin.login?svctype=262144&url=http://m.naver.com/aside/")    
-        inputkeys(driver, naverid, "아이디")
-        inputkeys(driver, naverpassword, "비밀번호")
-        driver.find_element(By.XPATH, f"//input[@placeholder='비밀번호']").send_keys(Keys.ENTER)
+        inputkeys(driver, naverid, "id")
+        inputkeys(driver, naverpassword, "pw")
+        driver.find_element(By.XPATH, '//*[@id="pw"]').send_keys(Keys.ENTER)
         time.sleep(2)
         fail_login = failLogin(driver)
 

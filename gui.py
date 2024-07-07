@@ -7,7 +7,7 @@ class MyWindow(QWidget):
         super().__init__()
         self.setWindowTitle("AutoBlog copyright © Gmail : nohdol97")
         self.setGeometry(100, 100, 1300, 400)
-        self.set_id = "" # ex) jkjk852
+        self.set_id = "jkjk741" # ex) jkjk852
         # 아이디와 비밀번호 입력
         self.id_label = QLabel(f"아이디: {self.set_id}")
 
