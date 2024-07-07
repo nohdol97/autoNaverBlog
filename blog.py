@@ -48,14 +48,13 @@ def execute(id, pw, execute_max, random_rate, is_secret, is_unNewPost):
     if is_unNewPost:
         action.unNewPost(driver)
 
-def time_execute(id, pw, execute_max, execute_hour, random_rate, is_secret, is_unNewPost):
+def time_execute(id, pw, execute_max, execute_hour, execute_minute, random_rate, is_secret, is_unNewPost):
     hour = 0
     if len(str(execute_hour)) < 2:
         hour = f"0{execute_hour}"
     else:
         hour = str(execute_hour)
-    minute = util.getMinute()
-    exeTime = f"{hour}:{minute}"
+    exeTime = f"{hour}:{execute_minute}"
     print(f"작업 시작할 시간: {exeTime}")
     util.wait_until(exeTime)
     execute(id, pw, execute_max, random_rate, is_secret, is_unNewPost)
@@ -117,4 +116,29 @@ def auto(id, pw, execute_hour_list, execute_max, random_rate, is_secret, is_unNe
     else:
         work(id, pw, execute_hour_list, int(execute_max), random_rate, is_secret, is_unNewPost)
 
-# execute("ryunoh9798", "gudtjrwjdals", 5, 1, 1.0, False)
+def serverAction():
+    time_list = []
+    random_rate = float(70) / 100  # 숫자로 변환
+    is_secret = False
+    is_unNewPost = True
+    with open("savedInfo.txt", "r") as file:
+        lines = file.readlines()
+    id = lines[0]
+    pw = lines[1]
+    max_input = lines[2]
+    for line in lines[3:]:
+        time_list.append(int(line))
+        
+    driver = driverInfo.setup_chrome_driver()
+    action.login(driver, id, pw)
+    time.sleep(3)
+    checkFailLogin = action.failLogin(driver)
+    driver.quit()
+    if checkFailLogin:
+        print("로그인에 실패하였습니다.\n아이디와 비밀번호를 확인해주세요.")
+    else:
+        print("블로그 작업을 시작합니다.")
+        main(id, pw, time_list, max_input, random_rate, is_secret, is_unNewPost)
+
+# serverAction()
+execute("ryunoh9798", "rkddkwlvnf0!", 150, 70, False, True)
