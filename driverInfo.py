@@ -21,7 +21,6 @@ def setup_chrome_driver():
     chrome_options.add_argument("--disk-cache-size=0")
     chrome_options.add_argument('--disable-background-timer-throttling')
     chrome_options.add_argument('--disable-renderer-backgrounding')
-    chrome_options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
 
     chrome_prefs = {
         "profile.managed_default_content_settings.images": 2,  # 이미지 비활성화

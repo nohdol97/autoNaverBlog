@@ -2,22 +2,13 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import pyperclip as pp
 import time
-from random import uniform, randrange, shuffle
+from random import uniform
 import comment
+import scrollUtil
 
 #좋아요 누른 개수, 다음 태그로 넘어가는 개수
 clickedLikeNum : int = 0
 stopTagNum : int = 0
-
-# 원하는 태그 목록
-# searchWords : list = ["원하는","태그","입력"]
-
-# 태그 순서 섞기
-# shuffle(searchWords)
-
-# 각 태그당 좋아요를 누를 최소, 최대 개수
-# tagMinNum : int = 40
-# tagMaxNum : int = 60
 
 def inputkeys(driver, someWord : str, placeholder : str):
     pp.copy(someWord)
@@ -91,24 +82,22 @@ def closeBlog(driver):
 def availableLike(driver):
     global stopTagNum
     try : 
-        confirmlike = driver.find_element(By.XPATH, "//*[@id='body']/div[10]/div/div[1]/div/div/a").get_attribute("class").split(" ")
+        confirmlike = driver.find_element(By.XPATH, '//*[@id="body"]/div[9]/div/div[1]/div/div/a').get_attribute("class").split(" ")
         if "on" in confirmlike :
             stopTagNum += 1
             print(f'이미 좋아요 누른 게시물 {stopTagNum}개')
             return False
         elif "off" in confirmlike : 
             return True
-    except Exception as e: 
-        print(e)
-        print('좋아요가 제한된 게시물')
+    except: 
+        print('좋아요가 제한 되었거나, 위치가 바뀌었습니다.')
         return False
     
-def clickLike(driver, scrollMinPauseTime, scrollMaxPauseTime):
-    while scrollEndPosition(driver):
-        driver.find_element(By.XPATH, "//body").send_keys(Keys.PAGE_DOWN)
-        time.sleep(uniform(scrollMinPauseTime, scrollMaxPauseTime))
-    
+def clickLike(driver):
     like_btn = driver.find_element(By.XPATH, "//div[@class='btn_like']/div")
+
+    scrollUtil.smooth_scroll_to_element(driver, like_btn)
+
     driver.execute_script("arguments[0].scrollIntoView({block : 'center'});", like_btn)
     like_btn.click()
     global clickedLikeNum
@@ -133,6 +122,7 @@ def neighborNewFeed(driver, maxnum : int):
     neighborUrls = []
     for neighborBlog in neighborBlogs:
         neighborUrls.append(neighborBlog.get_attribute('href'))
+    neighborUrls.reverse()
     return neighborUrls
 
 def cancelNotification(driver):

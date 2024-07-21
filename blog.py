@@ -1,18 +1,10 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-import pyperclip as pp
 import time
-from random import uniform, randrange, shuffle
+from random import uniform
 
 import action
 import comment
 import driverInfo
 import util
-
-# 좋아요를 누르기 전 스크롤을 할 때 스크롤 최소, 최대 시간
-scrollMinPauseTime : float = 0.5
-scrollMaxPauseTime : float = 1.0
 
 # 이웃 블로그 최대 수(이웃이 많을 경우 스크롤 제한하기)
 maxneighbornum = 1000
@@ -38,7 +30,7 @@ def execute(id, pw, execute_max, random_rate, is_secret, is_unNewPost):
         # 좋아요가 클릭 가능한지 확인 후 클릭, 아니면 창 닫기 
         if action.availableLike(driver) :
             cnt = cnt + 1
-            action.clickLike(driver, scrollMinPauseTime, scrollMaxPauseTime)
+            action.clickLike(driver)
             comment.leaveComment(driver, is_secret, util.random_choice_with_probability(random_rate))
         else :
             action.closeBlog(driver)
@@ -107,3 +99,5 @@ def work(id, pw, execute_hour_list, execute_max, random_rate, is_secret, is_unNe
 
 def auto(id, pw, execute_hour_list, execute_max, random_rate, is_secret, is_unNewPost):
     work(id, pw, execute_hour_list, int(execute_max), random_rate, is_secret, is_unNewPost)
+
+# execute('ryunoh9798', 'wjdalsdlrnldudnj', 100, 0.7, False, False)
